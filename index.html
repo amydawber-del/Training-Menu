@@ -24,7 +24,7 @@
 }
 
 *,*::before,*::after{box-sizing:border-box;}
-html,body{margin:0;padding:0;}
+html,body{margin:0;padding:0;height:600px;width:100%;overflow:hidden;}
 body{
   font-family:'DM Sans',-apple-system,'Helvetica Neue',Arial,sans-serif;
   background:var(--s-surface);
@@ -37,8 +37,7 @@ body{
   max-width:1080px;
   margin:0 auto;
   padding:16px 24px 0;
-  min-height:100vh;
-  height:100vh;
+  height:100%;
   display:flex;
   flex-direction:column;
 }
@@ -84,39 +83,36 @@ body{
 .page.leaving-left{ transform:translateX(-24px); }
 
 /* ── Cover page ─────────────────────────────────────────── */
-.cover-page{ position:relative; flex-direction:row !important; align-items:center; gap:32px; }
-.cover-logo-img{
+.cover-page{ position:relative; display:block; }
+.cover-hero-bg{
   position:absolute;
-  top:28px; right:44px;
-  height:24px; width:auto;
-  display:block;
+  right:-70px; bottom:-50px;
+  width:560px; max-width:60%;
+  height:auto;
+  z-index:0;
+  border-radius:var(--s-r-md);
+  box-shadow:var(--s-shadow-md);
+  pointer-events:none;
 }
 .cover-text-col{
-  flex:1 1 auto;
-  min-width:0;
-  display:flex;
-  flex-direction:column;
+  position:relative;
+  z-index:1;
+  max-width:480px;
+}
+.cover-logo-img{
+  height:32px; width:auto;
+  display:block;
+  margin:0 0 30px;
 }
 .cover-title{
-  font-size:34px; font-weight:700; letter-spacing:-1px;
+  font-size:32px; font-weight:700; letter-spacing:-1px;
   line-height:1.1; margin:0 0 14px;
-  max-width:92%;
   color:var(--s-text-primary);
 }
 .cover-intro{
   font-size:14px; color:var(--s-text-secondary);
   max-width:440px; line-height:1.55;
   margin:0;
-}
-.cover-hero-wrap{
-  flex:0 0 auto;
-  display:flex; align-items:center; justify-content:center;
-}
-.cover-hero-img{
-  width:280px; max-width:38vw; height:auto;
-  border-radius:var(--s-r-md);
-  box-shadow:var(--s-shadow-md);
-  display:block;
 }
 .cover-meta{
   margin-top:20px; padding-top:0;
@@ -532,15 +528,15 @@ function buildCoverPage() {
   const page = document.createElement('div');
   page.className = 'page cover-page';
   page.innerHTML = `
-    <img class="cover-logo-img" src="${LOGO_DATA_URI}" alt="Street.co.uk">
+    <img class="cover-hero-bg" src="${HERO_DATA_URI}" alt="">
     <div class="cover-text-col">
+      <img class="cover-logo-img" src="${LOGO_DATA_URI}" alt="Street.co.uk">
       <h1 class="cover-title">Training Menu</h1>
       <p class="cover-intro">Welcome to Street! We're excited to help you get started with the platform.
         To make your onboarding experience as smooth as possible, we've put together a range of
         training options tailored to suit various learning styles and schedules.</p>
       <div class="cover-meta">Use the arrows or dots below to browse training options →</div>
     </div>
-    <div class="cover-hero-wrap"><img class="cover-hero-img" src="${HERO_DATA_URI}" alt="Street dashboard preview"></div>
   `;
   return page;
 }
