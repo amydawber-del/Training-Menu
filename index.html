@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Street.co.uk — Training Menu</title>
+<style>
+/* ============================================================
+   DESIGN TOKENS — lifted from Amy's street-theme.css so this
+   flipbook matches the rest of the Street Training Dashboard.
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+
+:root{
+  --s-navy:#12152A; --s-navy-mid:#1C2040; --s-navy-border:#2A2F52;
+  --s-purple:#5B4BE7; --s-purple-hover:#4A3BCF;
+  --s-lavender:#EEF0FF; --s-lavender-mid:#E4E7FF; --s-lavender-dark:#C8CCFF;
+  --s-white:#FFFFFF; --s-surface:#F7F8FC; --s-border:#E8EAF0; --s-border-mid:#D4D7E5;
+  --s-text-primary:#12152A; --s-text-secondary:#4A4F70; --s-text-muted:#7B80A0; --s-text-faint:#A8ADCA;
+  --s-shadow-sm:0 1px 3px rgba(18,21,42,.06),0 1px 2px rgba(18,21,42,.04);
+  --s-shadow-md:0 4px 16px rgba(18,21,42,.08),0 1px 4px rgba(18,21,42,.05);
+  --s-shadow-lg:0 12px 40px rgba(18,21,42,.14),0 2px 8px rgba(18,21,42,.06);
+  --s-r-sm:6px; --s-r-md:10px; --s-r-lg:14px; --s-r-xl:18px; --s-r-pill:100px;
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:'DM Sans',-apple-system,'Helvetica Neue',Arial,sans-serif;
+  background:var(--s-surface);
+  color:var(--s-text-primary);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+
+.app{
+  max-width:960px;
+  margin:0 auto;
+  padding:32px 20px 0;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+/* ── Flipbook shell ─────────────────────────────────────── */
+.book{
+  position:relative;
+  background:var(--s-white);
+  border-radius:var(--s-r-xl);
+  box-shadow:var(--s-shadow-lg);
+  border:1px solid var(--s-border);
+  overflow:hidden;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  min-height:600px;
+}
+
+.pages-viewport{
+  position:relative;
+  flex:1;
+  overflow:hidden;
+}
+
+.page{
+  position:absolute;
+  inset:0;
+  padding:56px 56px 24px;
+  opacity:0;
+  transform:translateX(24px);
+  transition:opacity .38s ease, transform .38s ease;
+  pointer-events:none;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+}
+.page.active{
+  opacity:1;
+  transform:translateX(0);
+  pointer-events:auto;
+  z-index:2;
+}
+.page.leaving-left{ transform:translateX(-24px); }
+
+/* ── Cover page ─────────────────────────────────────────── */
+.cover-page{ justify-content:center; }
+.cover-logo{
+  font-size:15px; font-weight:700; letter-spacing:-0.3px;
+  color:var(--s-text-primary); margin-bottom:40px;
+}
+.cover-logo .dot{ color:var(--s-purple); }
+.cover-title{
+  font-size:52px; font-weight:700; letter-spacing:-1.5px;
+  line-height:1.02; margin:0 0 22px;
+  color:var(--s-text-primary);
+}
+.cover-intro{
+  font-size:16px; color:var(--s-text-secondary);
+  max-width:520px; line-height:1.6;
+}
+.cover-meta{
+  margin-top:auto; padding-top:32px;
+  font-size:12px; color:var(--s-text-muted);
+}
+
+/* ── Filter bar (shown on option pages) ─────────────────── */
+.filter-bar{
+  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+  margin-bottom:22px;
+}
+.filter-bar label{
+  font-size:10px; font-weight:700; text-transform:uppercase;
+  letter-spacing:.6px; color:var(--s-text-muted); margin-right:4px;
+}
+.filter-select{
+  font-family:'DM Sans',sans-serif;
+  border:1px solid var(--s-border-mid);
+  border-radius:var(--s-r-sm);
+  padding:6px 10px; font-size:12px; color:var(--s-text-primary);
+  background:var(--s-white);
+}
+.filter-select:focus{ outline:none; border-color:var(--s-purple); box-shadow:0 0 0 3px rgba(91,75,231,.12); }
+
+.page-heading{
+  font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase;
+  color:var(--s-purple); margin:0 0 18px;
+}
+
+/* ── Option cards ───────────────────────────────────────── */
+.cards-wrap{
+  display:flex; flex-direction:column; gap:16px;
+}
+.option-card{
+  border:1px solid var(--s-border);
+  border-radius:var(--s-r-lg);
+  background:var(--s-white);
+  box-shadow:var(--s-shadow-sm);
+  overflow:hidden;
+}
+.option-card-top{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 20px 0;
+}
+.cost-badge{
+  border:1px solid var(--s-border-mid);
+  border-radius:var(--s-r-sm);
+  padding:6px 12px;
+  font-size:11px; font-weight:700; letter-spacing:.3px;
+  color:var(--s-text-secondary);
+  background:var(--s-white);
+  white-space:nowrap;
+}
+.option-pill{
+  background:var(--s-lavender);
+  color:var(--s-purple);
+  border-radius:var(--s-r-pill);
+  font-size:11px; font-weight:700;
+  padding:6px 14px;
+  white-space:nowrap;
+}
+.option-title{
+  font-size:19px; font-weight:700; letter-spacing:-.3px;
+  color:var(--s-text-primary);
+  margin:14px 20px 0;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--s-border);
+}
+.option-body{
+  background:var(--s-surface);
+  margin:0; padding:16px 20px 18px;
+}
+.option-desc{
+  font-size:13px; color:var(--s-text-secondary);
+  margin:0 0 12px;
+}
+.option-notes{
+  font-size:12px; color:var(--s-text-muted);
+  font-style:italic;
+  margin:0 0 12px;
+}
+.option-meta-row{
+  display:flex; gap:26px; flex-wrap:wrap;
+  font-size:12.5px; color:var(--s-text-secondary); font-weight:500;
+}
+.option-meta-item{ display:flex; align-items:center; gap:7px; }
+.option-meta-item svg{ flex-shrink:0; }
+
+/* ── Closing / support page ────────────────────────────── */
+.closing-heading{
+  font-size:24px; font-weight:700; letter-spacing:-.5px;
+  margin:0 0 16px; color:var(--s-text-primary);
+}
+.closing-text{
+  font-size:14px; color:var(--s-text-secondary);
+  max-width:520px; margin:0 0 14px;
+}
+.closing-highlight{
+  font-weight:600; color:var(--s-text-primary);
+}
+
+/* ── State screens (loading / error / empty) ─────────────── */
+.state-screen{
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:14px; text-align:center; padding:40px;
+}
+.state-icon{ font-size:34px; }
+.state-title{ font-size:15px; font-weight:700; color:var(--s-text-primary); }
+.state-sub{ font-size:12.5px; color:var(--s-text-muted); max-width:340px; }
+.spinner{
+  width:26px; height:26px; border-radius:50%;
+  border:3px solid var(--s-border-mid); border-top-color:var(--s-purple);
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.retry-btn{
+  font-family:'DM Sans',sans-serif; font-weight:600; font-size:12px;
+  background:var(--s-purple); color:#fff; border:none; border-radius:var(--s-r-sm);
+  padding:9px 18px; cursor:pointer;
+}
+.retry-btn:hover{ background:var(--s-purple-hover); }
+
+/* ── Footer bar ─────────────────────────────────────────── */
+.footer-bar{
+  background:var(--s-navy);
+  color:rgba(255,255,255,.55);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 28px;
+  font-size:11px; font-weight:600; letter-spacing:.8px; text-transform:uppercase;
+}
+.footer-mark{
+  display:flex; align-items:center; gap:10px;
+  color:#fff; font-size:12px;
+}
+.footer-mark .st-square{
+  width:20px; height:20px; border-radius:5px; background:var(--s-purple);
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:800; letter-spacing:0;
+}
+.footer-page-num{ color:#fff; font-size:13px; }
+
+/* ── Controls (outside the book) ───────────────────────── */
+.controls{
+  display:flex; align-items:center; justify-content:center; gap:18px;
+  padding:20px 0 36px;
+}
+.nav-btn{
+  width:40px; height:40px; border-radius:50%;
+  border:1px solid var(--s-border-mid); background:var(--s-white);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; box-shadow:var(--s-shadow-sm);
+  transition:all .15s;
+}
+.nav-btn:hover:not(:disabled){ border-color:var(--s-purple); background:var(--s-lavender); }
+.nav-btn:disabled{ opacity:.35; cursor:not-allowed; }
+.dots{ display:flex; gap:7px; align-items:center; }
+.dot{
+  width:8px; height:8px; border-radius:50%; background:var(--s-border-mid);
+  cursor:pointer; border:none; padding:0; transition:all .15s;
+}
+.dot.active{ background:var(--s-purple); width:22px; border-radius:var(--s-r-pill); }
+.page-count{
+  font-size:12px; color:var(--s-text-muted); font-weight:600; min-width:56px; text-align:center;
+}
+
+/* ── Mobile ─────────────────────────────────────────────── */
+@media (max-width:640px){
+  .app{ padding:16px 12px 0; }
+  .page{ padding:32px 20px 16px; }
+  .cover-title{ font-size:32px; letter-spacing:-1px; }
+  .cover-intro{ font-size:14px; }
+  .option-meta-row{ gap:14px; flex-direction:column; align-items:flex-start; }
+  .footer-bar{ padding:12px 16px; }
+  .filter-bar{ gap:8px; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="book" id="book">
+    <div class="pages-viewport" id="pagesViewport">
+      <!-- pages are injected by JS -->
+      <div class="state-screen" id="stateScreen">
+        <div class="spinner"></div>
+        <div class="state-title">Loading training menu…</div>
+        <div class="state-sub">Fetching the latest options from the Street training sheet.</div>
+      </div>
+    </div>
+    <div class="footer-bar">
+      <div class="footer-mark">
+        <span class="st-square">S</span>
+        <span>Street.co.uk</span>
+      </div>
+      <span>Training Menu</span>
+      <span class="footer-page-num">Page: <span id="footerPageNum">–</span></span>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="nav-btn" id="prevBtn" aria-label="Previous page">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="#4A4F70" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="dots" id="dots"></div>
+    <span class="page-count" id="pageCount">– / –</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Next page">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#4A4F70" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   CONFIG — your Apps Script Web App URL.
+   ================================================================ */
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzCvBhFSPyyoaVsui0DCxvGQQa0V7e_UCJ5LfqvcSysTHTFlNRcx4ewlET5TyouJ0ZYow/exec';
+
+// Action name expected on the Apps Script side (see APPS_SCRIPT_ADDITION.gs)
+const ACTION_NAME = 'getTrainingMenu';
+
+// How many option cards per "page" of the flipbook on desktop.
+const CARDS_PER_PAGE = 3;
+
+// How long to wait for the Apps Script response before showing an error.
+const REQUEST_TIMEOUT_MS = 12000;
+
+/* ================================================================
+   JSONP LOADER
+   Amy's Apps Script backend already wraps responses in a callback
+   when a ?callback= param is present (see _respond() in Code.gs),
+   so we load data via a <script> tag rather than fetch() — this
+   sidesteps the CORS / redirect issues noted in her GAS comments.
+   ================================================================ */
+function loadJSONP(url, timeoutMs) {
+  return new Promise((resolve, reject) => {
+    const callbackName = '__trainingMenuCB_' + Math.random().toString(36).slice(2);
+    const script = document.createElement('script');
+    let settled = false;
+
+    const cleanup = () => {
+      delete window[callbackName];
+      script.remove();
+      clearTimeout(timer);
+    };
+
+    const timer = setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      reject(new Error('Request timed out — the training sheet took too long to respond.'));
+    }, timeoutMs);
+
+    window[callbackName] = (data) => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      resolve(data);
+    };
+
+    script.onerror = () => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      reject(new Error('Could not reach the Apps Script Web App — check the URL and that it is deployed as "Anyone" access.'));
+    };
+
+    const sep = url.includes('?') ? '&' : '?';
+    script.src = url + sep + 'callback=' + callbackName;
+    document.head.appendChild(script);
+  });
+}
+
+/* ================================================================
+   NORMALISATION
+   If the sheet/API ever returns raw rows instead of objects, map
+   common header variants onto the fields the flipbook expects.
+   Column names to look for (case-insensitive), left → right:
+   Active | Option | Name/Training Type/Title | Price/Cost |
+   Location | Timings/Duration | Description | Notes | Sort Order
+   ================================================================ */
+const HEADER_MAP = {
+  active:      ['active'],
+  option:      ['option'],
+  name:        ['name', 'training type', 'title'],
+  price:       ['price', 'cost'],
+  location:    ['location'],
+  timings:     ['timings', 'duration'],
+  description: ['description', 'bio'],
+  notes:       ['notes'],
+  sortOrder:   ['sort order', 'sortorder', 'order'],
+};
+
+function toBool(v) {
+  if (v === true || v === false) return v;
+  const s = String(v ?? '').toLowerCase().trim();
+  return s === 'true' || s === 'yes' || s === '1';
+}
+
+function normaliseTrainingData(payload) {
+  // Case 1: already in the expected shape — array of objects.
+  if (Array.isArray(payload) && (payload.length === 0 || typeof payload[0] === 'object')) {
+    return payload.map(normaliseRecord).filter(Boolean);
+  }
+  return [];
+}
+
+function normaliseRecord(raw) {
+  if (!raw || typeof raw !== 'object') return null;
+  const lowerKeyed = {};
+  Object.keys(raw).forEach(k => { lowerKeyed[k.toLowerCase().trim()] = raw[k]; });
+
+  function pick(fieldNames, fallback = '') {
+    for (const key of fieldNames) {
+      if (key in lowerKeyed && lowerKeyed[key] !== '' && lowerKeyed[key] != null) return lowerKeyed[key];
+    }
+    // also allow already-camelCased keys from our own API shape
+    return fallback;
+  }
+
+  const record = {
+    active:      raw.active !== undefined ? toBool(raw.active) : toBool(pick(HEADER_MAP.active, true)),
+    option:      raw.option      ?? pick(HEADER_MAP.option, ''),
+    name:        raw.name        ?? pick(HEADER_MAP.name, ''),
+    price:       raw.price       ?? pick(HEADER_MAP.price, 'POA'),
+    location:    raw.location    ?? pick(HEADER_MAP.location, ''),
+    timings:     raw.timings     ?? pick(HEADER_MAP.timings, ''),
+    description: raw.description ?? pick(HEADER_MAP.description, ''),
+    notes:       raw.notes       ?? pick(HEADER_MAP.notes, ''),
+    sortOrder:   raw.sortOrder   ?? Number(pick(HEADER_MAP.sortOrder, 999)) ?? 999,
+  };
+
+  // Missing-field safety net — never render a blank card.
+  if (!record.name) record.name = 'Untitled training option';
+  if (!record.price) record.price = 'POA';
+
+  return record;
+}
+
+/* ================================================================
+   FILTER CLASSIFICATION HELPERS
+   ================================================================ */
+function classifyLocation(loc) {
+  const l = (loc || '').toLowerCase();
+  if (l.includes('hq')) return 'Street HQ';
+  if (l.includes('remote')) return 'Remote';
+  if (l.includes('office') || l.includes('venue')) return 'Your Office';
+  return 'Other';
+}
+
+function classifyPricing(price) {
+  const p = (price || '').toLowerCase();
+  if (p.includes('poa')) return 'POA';
+  if (p.includes('included')) return 'Included';
+  return 'Fixed Price';
+}
+
+/* ================================================================
+   ICONS
+   ================================================================ */
+const ICON_PIN = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z" stroke="#5B4BE7" stroke-width="1.8"/><circle cx="12" cy="10" r="2.4" stroke="#5B4BE7" stroke-width="1.8"/></svg>`;
+const ICON_CLOCK = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="#5B4BE7" stroke-width="1.8"/><path d="M12 7.5V12l3 2" stroke="#5B4BE7" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+
+/* ================================================================
+   APP STATE + RENDER
+   ================================================================ */
+let allOptions = [];
+let pages = [];      // array of DOM elements, in order
+let currentPage = 0;
+let filters = { location: 'all', pricing: 'all' };
+
+const viewport = document.getElementById('pagesViewport');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const dotsEl = document.getElementById('dots');
+const pageCountEl = document.getElementById('pageCount');
+const footerPageNumEl = document.getElementById('footerPageNum');
+
+function escapeHtml(str) {
+  return String(str ?? '').replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+function buildOptionCard(opt) {
+  const card = document.createElement('div');
+  card.className = 'option-card';
+  card.innerHTML = `
+    <div class="option-card-top">
+      <span class="cost-badge">COST: ${escapeHtml(opt.price.toUpperCase())}</span>
+      ${opt.option ? `<span class="option-pill">${escapeHtml(opt.option.toUpperCase())}</span>` : ''}
+    </div>
+    <h3 class="option-title">${escapeHtml(opt.name)}</h3>
+    <div class="option-body">
+      ${opt.description ? `<p class="option-desc">${escapeHtml(opt.description)}</p>` : ''}
+      ${opt.notes ? `<p class="option-notes">${escapeHtml(opt.notes)}</p>` : ''}
+      <div class="option-meta-row">
+        ${opt.location ? `<span class="option-meta-item">${ICON_PIN}${escapeHtml(opt.location)}</span>` : ''}
+        ${opt.timings ? `<span class="option-meta-item">${ICON_CLOCK}${escapeHtml(opt.timings)}</span>` : ''}
+      </div>
+    </div>
+  `;
+  return card;
+}
+
+function buildCoverPage() {
+  const page = document.createElement('div');
+  page.className = 'page cover-page';
+  page.innerHTML = `
+    <div class="cover-logo">STREET<span class="dot">_</span>CO.UK</div>
+    <h1 class="cover-title">Training Menu</h1>
+    <p class="cover-intro">Welcome to Street! We're excited to help you get started with the platform.
+      To make your onboarding experience as smooth as possible, we've put together a range of
+      training options tailored to suit various learning styles and schedules.</p>
+    <div class="cover-meta">Use the arrows or dots below to browse training options →</div>
+  `;
+  return page;
+}
+
+function buildFilterBar() {
+  const bar = document.createElement('div');
+  bar.className = 'filter-bar';
+  bar.innerHTML = `
+    <label>Location</label>
+    <select class="filter-select" id="locationFilter">
+      <option value="all">All locations</option>
+      <option value="Your Office">Your Office</option>
+      <option value="Street HQ">Street HQ</option>
+      <option value="Remote">Remote</option>
+    </select>
+    <label>Pricing</label>
+    <select class="filter-select" id="pricingFilter">
+      <option value="all">All pricing</option>
+      <option value="Fixed Price">Fixed Price</option>
+      <option value="POA">POA</option>
+      <option value="Included">Included</option>
+    </select>
+  `;
+  bar.querySelector('#locationFilter').value = filters.location;
+  bar.querySelector('#pricingFilter').value = filters.pricing;
+  bar.querySelector('#locationFilter').addEventListener('change', e => {
+    filters.location = e.target.value;
+    render();
+  });
+  bar.querySelector('#pricingFilter').addEventListener('change', e => {
+    filters.pricing = e.target.value;
+    render();
+  });
+  return bar;
+}
+
+function buildOptionPage(optionsChunk, pageLabel) {
+  const page = document.createElement('div');
+  page.className = 'page';
+  page.appendChild(buildFilterBar());
+
+  const heading = document.createElement('div');
+  heading.className = 'page-heading';
+  heading.textContent = pageLabel;
+  page.appendChild(heading);
+
+  const wrap = document.createElement('div');
+  wrap.className = 'cards-wrap';
+  optionsChunk.forEach(opt => wrap.appendChild(buildOptionCard(opt)));
+  page.appendChild(wrap);
+
+  return page;
+}
+
+function buildClosingPage() {
+  const page = document.createElement('div');
+  page.className = 'page';
+  page.innerHTML = `
+    <div class="page-heading">On-Going Support</div>
+    <h2 class="closing-heading">On-Going Support &amp; Assistance</h2>
+    <p class="closing-text">Our Onboarding Team is readily available to assist with any questions or issues.
+      Contact us via the Project Board.</p>
+    <p class="closing-text"><span class="closing-highlight">We are committed to making your transition to
+      Street CRM a seamless and successful experience.</span></p>
+  `;
+  return page;
+}
+
+function buildEmptyState() {
+  viewport.innerHTML = `
+    <div class="state-screen">
+      <div class="state-icon">📭</div>
+      <div class="state-title">No active training types found</div>
+      <div class="state-sub">Nothing matches the current filters, or no rows are marked Active in the Training Menu sheet.</div>
+    </div>
+  `;
+}
+
+function buildErrorState(message) {
+  viewport.innerHTML = `
+    <div class="state-screen">
+      <div class="state-icon">⚠️</div>
+      <div class="state-title">Couldn't load the training menu</div>
+      <div class="state-sub">${escapeHtml(message)}</div>
+      <button class="retry-btn" id="retryBtn">Try again</button>
+    </div>
+  `;
+  document.getElementById('retryBtn').addEventListener('click', fetchTrainingMenu);
+}
+
+function chunk(arr, size) {
+  const out = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
+}
+
+function render() {
+  const filtered = allOptions.filter(opt => {
+    const locOk = filters.location === 'all' || classifyLocation(opt.location) === filters.location;
+    const priceOk = filters.pricing === 'all' || classifyPricing(opt.price) === filters.pricing;
+    return locOk && priceOk;
+  });
+
+  if (filtered.length === 0 && allOptions.length > 0) {
+    // Filters produced nothing — still show cover + closing so nav isn't dead,
+    // but flag the empty middle section.
+  }
+
+  viewport.innerHTML = '';
+  pages = [];
+  pages.push(buildCoverPage());
+
+  const chunks = chunk(filtered, CARDS_PER_PAGE);
+  if (chunks.length === 0) {
+    const page = document.createElement('div');
+    page.className = 'page';
+    page.appendChild(buildFilterBar());
+    page.innerHTML += `
+      <div class="state-screen" style="flex:1;">
+        <div class="state-icon">🔍</div>
+        <div class="state-title">No options match these filters</div>
+        <div class="state-sub">Try a different location or pricing filter.</div>
+      </div>
+    `;
+    pages.push(page);
+  } else {
+    chunks.forEach((c, i) => {
+      pages.push(buildOptionPage(c, `Training Options ${i + 1} of ${chunks.length}`));
+    });
+  }
+
+  pages.push(buildClosingPage());
+  pages.forEach(p => viewport.appendChild(p));
+
+  currentPage = Math.min(currentPage, pages.length - 1);
+  goToPage(currentPage);
+  buildDots();
+}
+
+function buildDots() {
+  dotsEl.innerHTML = '';
+  pages.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === currentPage ? ' active' : '');
+    dot.addEventListener('click', () => goToPage(i));
+    dotsEl.appendChild(dot);
+  });
+}
+
+function goToPage(index) {
+  if (index < 0 || index >= pages.length) return;
+  pages.forEach((p, i) => p.classList.toggle('active', i === index));
+  currentPage = index;
+  pageCountEl.textContent = `${currentPage + 1} / ${pages.length}`;
+  footerPageNumEl.textContent = currentPage + 1;
+  prevBtn.disabled = currentPage === 0;
+  nextBtn.disabled = currentPage === pages.length - 1;
+  [...dotsEl.children].forEach((d, i) => d.classList.toggle('active', i === currentPage));
+}
+
+prevBtn.addEventListener('click', () => goToPage(currentPage - 1));
+nextBtn.addEventListener('click', () => goToPage(currentPage + 1));
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') goToPage(currentPage - 1);
+  if (e.key === 'ArrowRight') goToPage(currentPage + 1);
+});
+
+/* ================================================================
+   FETCH + BOOT
+   ================================================================ */
+async function fetchTrainingMenu() {
+  viewport.innerHTML = `
+    <div class="state-screen">
+      <div class="spinner"></div>
+      <div class="state-title">Loading training menu…</div>
+      <div class="state-sub">Fetching the latest options from the Street training sheet.</div>
+    </div>
+  `;
+
+  try {
+    const url = `${WEB_APP_URL}?action=${ACTION_NAME}`;
+    const result = await loadJSONP(url, REQUEST_TIMEOUT_MS);
+
+    if (!result || result.success !== true) {
+      buildErrorState((result && result.error) || 'The Apps Script Web App returned an unexpected response.');
+      return;
+    }
+
+    const normalised = normaliseTrainingData(result.data || []);
+    const activeOnly = normalised.filter(o => o.active);
+
+    if (activeOnly.length === 0) {
+      allOptions = [];
+      buildEmptyState();
+      return;
+    }
+
+    allOptions = activeOnly.sort((a, b) => a.sortOrder - b.sortOrder);
+    render();
+  } catch (err) {
+    buildErrorState(err.message || 'Something went wrong talking to the Apps Script Web App.');
+  }
+}
+
+fetchTrainingMenu();
+</script>
+</body>
+</html>
