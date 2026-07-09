@@ -65,12 +65,12 @@ body{
 .page{
   position:absolute;
   inset:0;
-  padding:28px 44px 14px;
+  padding:22px 40px 10px;
   opacity:0;
   transform:translateX(24px);
   transition:opacity .38s ease, transform .38s ease;
   pointer-events:none;
-  overflow-y:auto;
+  overflow:hidden;
   display:flex;
   flex-direction:column;
 }
@@ -83,11 +83,11 @@ body{
 .page.leaving-left{ transform:translateX(-24px); }
 
 /* ── Cover page ─────────────────────────────────────────── */
-.cover-page{ position:relative; display:block; }
+.cover-page{ justify-content:center; }
 .cover-hero-bg{
   position:absolute;
-  right:-70px; bottom:-50px;
-  width:560px; max-width:60%;
+  right:-50px; bottom:-40px;
+  width:46%; max-width:420px;
   height:auto;
   z-index:0;
   border-radius:var(--s-r-md);
@@ -97,54 +97,55 @@ body{
 .cover-text-col{
   position:relative;
   z-index:1;
-  max-width:480px;
+  max-width:460px;
 }
 .cover-logo-img{
-  height:32px; width:auto;
+  height:26px; width:auto;
   display:block;
-  margin:0 0 30px;
+  margin:0 0 22px;
 }
 .cover-title{
-  font-size:32px; font-weight:700; letter-spacing:-1px;
-  line-height:1.1; margin:0 0 14px;
+  font-size:28px; font-weight:700; letter-spacing:-1px;
+  line-height:1.1; margin:0 0 12px;
   color:var(--s-text-primary);
 }
 .cover-intro{
-  font-size:14px; color:var(--s-text-secondary);
-  max-width:440px; line-height:1.55;
+  font-size:13.5px; color:var(--s-text-secondary);
+  max-width:430px; line-height:1.5;
   margin:0;
 }
 .cover-meta{
-  margin-top:20px; padding-top:0;
-  font-size:12px; color:var(--s-text-muted);
+  margin-top:16px; padding-top:0;
+  font-size:11.5px; color:var(--s-text-muted);
 }
 
 /* ── Filter bar (shown on option pages) ─────────────────── */
 .filter-bar{
   display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-  margin-bottom:22px;
+  margin-bottom:14px;
 }
 .filter-bar label{
-  font-size:10px; font-weight:700; text-transform:uppercase;
+  font-size:9.5px; font-weight:700; text-transform:uppercase;
   letter-spacing:.6px; color:var(--s-text-muted); margin-right:4px;
 }
 .filter-select{
   font-family:'DM Sans',sans-serif;
   border:1px solid var(--s-border-mid);
   border-radius:var(--s-r-sm);
-  padding:6px 10px; font-size:12px; color:var(--s-text-primary);
+  padding:4px 9px; font-size:11.5px; color:var(--s-text-primary);
   background:var(--s-white);
 }
 .filter-select:focus{ outline:none; border-color:var(--s-purple); box-shadow:0 0 0 3px rgba(91,75,231,.12); }
 
 .page-heading{
-  font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase;
-  color:var(--s-purple); margin:0 0 18px;
+  font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase;
+  color:var(--s-purple); margin:0 0 10px;
 }
 
 /* ── Option cards ───────────────────────────────────────── */
 .cards-wrap{
-  display:flex; flex-direction:column; gap:16px;
+  display:flex; flex-direction:column; gap:10px;
+  flex:1; min-height:0;
 }
 .option-card{
   border:1px solid var(--s-border);
@@ -152,16 +153,21 @@ body{
   background:var(--s-white);
   box-shadow:var(--s-shadow-sm);
   overflow:hidden;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
 }
 .option-card-top{
   display:flex; align-items:center; justify-content:space-between;
-  padding:16px 20px 0;
+  padding:11px 16px 0;
+  flex-shrink:0;
 }
 .cost-badge{
   border:1px solid var(--s-border-mid);
   border-radius:var(--s-r-sm);
-  padding:6px 12px;
-  font-size:11px; font-weight:700; letter-spacing:.3px;
+  padding:4px 10px;
+  font-size:10px; font-weight:700; letter-spacing:.3px;
   color:var(--s-text-secondary);
   background:var(--s-white);
   white-space:nowrap;
@@ -170,35 +176,49 @@ body{
   background:var(--s-lavender);
   color:var(--s-purple);
   border-radius:var(--s-r-pill);
-  font-size:11px; font-weight:700;
-  padding:6px 14px;
+  font-size:10px; font-weight:700;
+  padding:4px 12px;
   white-space:nowrap;
 }
 .option-title{
-  font-size:19px; font-weight:700; letter-spacing:-.3px;
+  font-size:15.5px; font-weight:700; letter-spacing:-.3px;
   color:var(--s-text-primary);
-  margin:14px 20px 0;
-  padding-bottom:14px;
+  margin:9px 16px 0;
+  padding-bottom:9px;
   border-bottom:1px solid var(--s-border);
+  flex-shrink:0;
 }
 .option-body{
   background:var(--s-surface);
-  margin:0; padding:16px 20px 18px;
+  margin:0; padding:10px 16px 12px;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  min-height:0;
 }
 .option-desc{
-  font-size:13px; color:var(--s-text-secondary);
-  margin:0 0 12px;
+  font-size:11.5px; color:var(--s-text-secondary);
+  margin:0 0 6px;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
 }
 .option-notes{
-  font-size:12px; color:var(--s-text-muted);
+  font-size:10.5px; color:var(--s-text-muted);
   font-style:italic;
-  margin:0 0 12px;
+  margin:0 0 6px;
+  display:-webkit-box;
+  -webkit-line-clamp:1;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
 }
 .option-meta-row{
-  display:flex; gap:26px; flex-wrap:wrap;
-  font-size:12.5px; color:var(--s-text-secondary); font-weight:500;
+  display:flex; gap:20px; flex-wrap:wrap;
+  font-size:11.5px; color:var(--s-text-secondary); font-weight:500;
 }
-.option-meta-item{ display:flex; align-items:center; gap:7px; }
+.option-meta-item{ display:flex; align-items:center; gap:6px; }
 .option-meta-item svg{ flex-shrink:0; }
 
 /* ── Closing / support page ────────────────────────────── */
@@ -240,27 +260,29 @@ body{
   background:var(--s-navy);
   color:rgba(255,255,255,.55);
   display:flex; align-items:center; justify-content:space-between;
-  padding:14px 28px;
-  font-size:11px; font-weight:600; letter-spacing:.8px; text-transform:uppercase;
+  padding:10px 24px;
+  font-size:10px; font-weight:600; letter-spacing:.8px; text-transform:uppercase;
+  flex-shrink:0;
 }
 .footer-mark{
-  display:flex; align-items:center; gap:10px;
-  color:#fff; font-size:12px;
+  display:flex; align-items:center; gap:8px;
+  color:#fff; font-size:11px;
 }
 .footer-mark .st-square{
-  width:20px; height:20px; border-radius:5px; background:var(--s-purple);
+  width:18px; height:18px; border-radius:5px; background:var(--s-purple);
   display:flex; align-items:center; justify-content:center;
-  font-size:11px; font-weight:800; letter-spacing:0;
+  font-size:10px; font-weight:800; letter-spacing:0;
 }
-.footer-page-num{ color:#fff; font-size:13px; }
+.footer-page-num{ color:#fff; font-size:12px; }
 
 /* ── Controls (outside the book) ───────────────────────── */
 .controls{
-  display:flex; align-items:center; justify-content:center; gap:18px;
-  padding:20px 0 36px;
+  display:flex; align-items:center; justify-content:center; gap:16px;
+  padding:12px 0 16px;
+  flex-shrink:0;
 }
 .nav-btn{
-  width:40px; height:40px; border-radius:50%;
+  width:32px; height:32px; border-radius:50%;
   border:1px solid var(--s-border-mid); background:var(--s-white);
   display:flex; align-items:center; justify-content:center;
   cursor:pointer; box-shadow:var(--s-shadow-sm);
@@ -334,7 +356,7 @@ const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzCvBhFSPyyoaVsui0D
 const ACTION_NAME = 'getTrainingMenu';
 
 // How many option cards per "page" of the flipbook on desktop.
-const CARDS_PER_PAGE = 3;
+const CARDS_PER_PAGE = 2;
 
 // How long to wait for the Apps Script response before showing an error.
 const REQUEST_TIMEOUT_MS = 12000;
